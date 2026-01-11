@@ -23,5 +23,6 @@ public class User {
     @Column(nullable = false, unique = true)
     private String email;
 
-    //TODO добваить age
+    @Column
+    private int age;
 }
