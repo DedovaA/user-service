@@ -9,9 +9,11 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: update  # Для обучения удобно: Hibernate сам создаст/обновит таблицы
+      ddl-auto: update  # Hibernate сам создаст/обновит таблицы
     show-sql: true      # Печатает SQL в консоль
     properties:
       hibernate:
         format_sql: true
-    open-in-view: false
+    open-in-view: false  # Убирает warn при запуске
+
+#TODO сделать swagger
