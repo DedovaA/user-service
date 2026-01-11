@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.Map;
 
-@RestControllerAdvice
+@RestControllerAdvice(basePackages = "aston.user_service.controller")
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(NotFoundException.class)

@@ -27,7 +27,7 @@ public class User {
     private String email;
 
     @Column(nullable = false)
-    private int age;
+    private Integer age;
 
     @CreationTimestamp
     @Column(nullable = false, updatable = false)

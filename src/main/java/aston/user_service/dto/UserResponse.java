@@ -9,6 +9,6 @@ public class UserResponse {
     Long id;
     String name;
     String email;
-    int age;
+    Integer age;
     LocalDateTime createdAt;
 }
