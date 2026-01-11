@@ -11,10 +11,17 @@ public class UserMapper {
         return User.builder()
                 .name(request.getName())
                 .email(request.getEmail())
+                .age(request.getAge())
                 .build();
     }
 
     public UserResponse toResponse(User user) {
-        return new UserResponse(user.getId(), user.getName(), user.getEmail());
+        return new UserResponse(
+                user.getId(),
+                user.getName(),
+                user.getEmail(),
+                user.getAge(),
+                user.getCreatedAt()
+        );
     }
 }

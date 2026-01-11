@@ -53,6 +53,7 @@ public class UserService {
 
         user.setName(request.getName());
         user.setEmail(request.getEmail());
+        user.setAge(request.getAge());
 
         User updated = userRepository.save(user);
         return userMapper.toResponse(updated);

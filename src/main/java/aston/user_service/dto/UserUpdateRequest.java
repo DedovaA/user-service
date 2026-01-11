@@ -1,7 +1,6 @@
 package aston.user_service.dto;
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -16,4 +15,9 @@ public class UserUpdateRequest {
     @Email(message = "email must be valid")
     @NotBlank(message = "email must not be blank")
     private String email;
+
+    @NotNull(message = "age must not be null")
+    @Min(value = 0, message = "age must be >= 0")
+    @Max(value = 150, message = "age must be <= 0")
+    private int age;
 }
