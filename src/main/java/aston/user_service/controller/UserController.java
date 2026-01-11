@@ -28,6 +28,11 @@ public class UserController {
         return userService.getById(id);
     }
 
+    @GetMapping("/email")
+    public UserResponse getByEmail(@RequestParam String email) {
+        return userService.getByEmail(email);
+    }
+
     @GetMapping
     public List<UserResponse> getAll() {
         return userService.getAll();
