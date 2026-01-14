@@ -10,6 +10,7 @@ import aston.user_service.model.User;
 import aston.user_service.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -19,6 +20,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
 
+    @Transactional
     public UserResponse create(UserCreateRequest request) {
         if (userRepository.existsByEmail(request.getEmail())) {
             throw new BadRequestException("User with email already exists: " + request.getEmail());
@@ -42,6 +44,7 @@ public class UserService {
                 .toList();
     }
 
+    @Transactional
     public UserResponse update(Long id, UserUpdateRequest request) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("User not found with id: " + id));
@@ -59,6 +62,7 @@ public class UserService {
         return userMapper.toResponse(updated);
     }
 
+    @Transactional
     public void delete(Long id) {
         if (!userRepository.existsById(id)) {
             throw new NotFoundException("User not found with id: " + id);
@@ -66,6 +70,7 @@ public class UserService {
         userRepository.deleteById(id);
     }
 
+    @Transactional
     public UserResponse getByEmail(String email) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new NotFoundException("User not found with email: " + email));
