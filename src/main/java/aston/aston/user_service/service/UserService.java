@@ -1,6 +1,7 @@
 package aston.user_service.service;
 
 import aston.user_service.dto.UserCreateRequest;
+import aston.user_service.dto.UserPatchRequest;
 import aston.user_service.dto.UserResponse;
 import aston.user_service.dto.UserUpdateRequest;
 import aston.user_service.exception.BadRequestException;
@@ -11,7 +12,6 @@ import aston.user_service.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -51,6 +51,25 @@ public class UserService {
         user.setName(request.getName());
         user.setEmail(request.getEmail());
         user.setAge(request.getAge());
+
+        try {
+            User updated = userRepository.save(user);
+            return userMapper.toResponse(updated);
+        } catch (DataIntegrityViolationException e) {
+            throw new BadRequestException("User with email already exists: " + request.getEmail());
+        }
+    }
+
+    public UserResponse patch(Long id, UserPatchRequest request) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("User not found with id: " + id));
+
+        if (request.getName() != null)
+            user.setName(request.getName().trim());
+        if (request.getEmail() != null)
+            user.setEmail(request.getEmail().trim());
+        if (request.getAge() != null)
+            user.setAge(request.getAge());
 
         try {
             User updated = userRepository.save(user);

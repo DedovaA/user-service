@@ -1,6 +1,7 @@
 package aston.user_service.controller;
 
 import aston.user_service.dto.UserCreateRequest;
+import aston.user_service.dto.UserPatchRequest;
 import aston.user_service.dto.UserResponse;
 import aston.user_service.dto.UserUpdateRequest;
 import aston.user_service.service.UserService;
@@ -42,6 +43,12 @@ public class UserController {
     public UserResponse update(@PathVariable Long id,
                                @Valid @RequestBody UserUpdateRequest request) {
         return userService.update(id, request);
+    }
+
+    @PatchMapping("/{id}")
+    public UserResponse patch(@PathVariable Long id,
+                               @Valid @RequestBody UserPatchRequest request) {
+        return userService.patch(id, request);
     }
 
     @DeleteMapping("/{id}")
