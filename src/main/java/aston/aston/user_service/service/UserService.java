@@ -9,6 +9,7 @@ import aston.user_service.mapper.UserMapper;
 import aston.user_service.model.User;
 import aston.user_service.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,22 +21,22 @@ public class UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
 
-    @Transactional
     public UserResponse create(UserCreateRequest request) {
-        if (userRepository.existsByEmail(request.getEmail())) {
+        User user = userMapper.toEntity(request);
+
+        try {
+            User saved = userRepository.save(user);
+            return userMapper.toResponse(saved);
+        } catch (DataIntegrityViolationException e) {
             throw new BadRequestException("User with email already exists: " + request.getEmail());
         }
-
-        User user = userMapper.toEntity(request);
-        User saved = userRepository.save(user);
-
-        return userMapper.toResponse(saved);
     }
 
     public UserResponse getById(Long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("User not found with id: " + id));
-    return userMapper.toResponse(user);
+
+        return userMapper.toResponse(user);
     }
 
     public List<UserResponse> getAll() {
@@ -44,33 +45,25 @@ public class UserService {
                 .toList();
     }
 
-    @Transactional
     public UserResponse update(Long id, UserUpdateRequest request) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("User not found with id: " + id));
-
-        String newEmail = request.getEmail();
-        if (!user.getEmail().equals(newEmail) && userRepository.existsByEmail(newEmail)) {
-            throw new BadRequestException("User with email already exists: " + newEmail);
-        }
-
         user.setName(request.getName());
         user.setEmail(request.getEmail());
         user.setAge(request.getAge());
 
-        User updated = userRepository.save(user);
-        return userMapper.toResponse(updated);
+        try {
+            User updated = userRepository.save(user);
+            return userMapper.toResponse(updated);
+        } catch (DataIntegrityViolationException e) {
+            throw new BadRequestException("User with email already exists: " + request.getEmail());
+        }
     }
 
-    @Transactional
     public void delete(Long id) {
-        if (!userRepository.existsById(id)) {
-            throw new NotFoundException("User not found with id: " + id);
-        }
         userRepository.deleteById(id);
     }
 
-    @Transactional
     public UserResponse getByEmail(String email) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new NotFoundException("User not found with email: " + email));
