@@ -1,8 +1,8 @@
-package aston.user_service.mapper;
+package user_service.mapper;
 
-import aston.user_service.dto.UserCreateRequest;
-import aston.user_service.dto.UserResponse;
-import aston.user_service.model.User;
+import user_service.dto.UserCreateRequest;
+import user_service.dto.UserResponse;
+import user_service.model.User;
 import org.springframework.stereotype.Component;
 
 @Component

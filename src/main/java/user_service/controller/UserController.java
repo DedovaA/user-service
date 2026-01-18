@@ -1,10 +1,9 @@
-package aston.user_service.controller;
+package user_service.controller;
 
-import aston.user_service.dto.UserCreateRequest;
-import aston.user_service.dto.UserPatchRequest;
-import aston.user_service.dto.UserResponse;
-import aston.user_service.dto.UserUpdateRequest;
-import aston.user_service.service.UserService;
+import user_service.dto.UserCreateRequest;
+import user_service.dto.UserPatchRequest;
+import user_service.dto.UserResponse;
+import user_service.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -41,7 +40,7 @@ public class UserController {
 
     @PutMapping("/{id}")
     public UserResponse update(@PathVariable Long id,
-                               @Valid @RequestBody UserUpdateRequest request) {
+                               @Valid @RequestBody UserCreateRequest request) {
         return userService.update(id, request);
     }
 

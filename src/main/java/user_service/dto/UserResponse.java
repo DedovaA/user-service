@@ -1,4 +1,4 @@
-package aston.user_service.dto;
+package user_service.dto;
 
 import lombok.*;
 

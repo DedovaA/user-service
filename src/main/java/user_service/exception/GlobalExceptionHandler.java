@@ -1,4 +1,4 @@
-package aston.user_service.exception;
+package user_service.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

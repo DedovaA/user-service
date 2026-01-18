@@ -1,6 +1,6 @@
-package aston.user_service.repository;
+package user_service.repository;
 
-import aston.user_service.model.User;
+import user_service.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

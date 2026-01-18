@@ -1,14 +1,13 @@
-package aston.user_service.service;
+package user_service.service;
 
-import aston.user_service.dto.UserCreateRequest;
-import aston.user_service.dto.UserPatchRequest;
-import aston.user_service.dto.UserResponse;
-import aston.user_service.dto.UserUpdateRequest;
-import aston.user_service.exception.BadRequestException;
-import aston.user_service.exception.NotFoundException;
-import aston.user_service.mapper.UserMapper;
-import aston.user_service.model.User;
-import aston.user_service.repository.UserRepository;
+import user_service.dto.UserCreateRequest;
+import user_service.dto.UserPatchRequest;
+import user_service.dto.UserResponse;
+import user_service.exception.BadRequestException;
+import user_service.exception.NotFoundException;
+import user_service.mapper.UserMapper;
+import user_service.model.User;
+import user_service.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -45,7 +44,7 @@ public class UserService {
                 .toList();
     }
 
-    public UserResponse update(Long id, UserUpdateRequest request) {
+    public UserResponse update(Long id, UserCreateRequest request) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("User not found with id: " + id));
         user.setName(request.getName());
