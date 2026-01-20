@@ -15,6 +15,6 @@ public class UserPatchRequest {
     private String email;
 
     @Min(value = 0, message = "age must be >= 0")
-    @Max(value = 150, message = "age must be <= 0")
+    @Max(value = 150, message = "age must be <= 150")
     private Integer age;
 }
