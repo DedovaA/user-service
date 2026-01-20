@@ -1,12 +1,11 @@
 server:
-  port: 8080  #TODO сделать swagger
+  port: 8080  #swagger
 
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/MyDatabase
+    url: jdbc:postgresql://localhost:5432/MyDatabase  # PgAdmin port:80
     username: postgres
     password: myforpgdbpar
-
   jpa:
     hibernate:
       ddl-auto: update
@@ -15,4 +14,11 @@ spring:
       hibernate:
         format_sql: true
     open-in-view: false  # Убирает warn при запуске
-
+  kafka:
+    bootstrap-servers: localhost:9092 # Kafka UI port:8081
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+app:
+  kafka:
+    topic: user.events.v2

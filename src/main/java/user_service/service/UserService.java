@@ -5,6 +5,8 @@ import user_service.dto.UserPatchRequest;
 import user_service.dto.UserResponse;
 import user_service.exception.BadRequestException;
 import user_service.exception.NotFoundException;
+import user_service.kafka.UserEvent;
+import user_service.kafka.UserEventProducer;
 import user_service.mapper.UserMapper;
 import user_service.model.User;
 import user_service.repository.UserRepository;
@@ -19,12 +21,16 @@ import java.util.List;
 public class UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final UserEventProducer userEventProducer;
 
     public UserResponse create(UserCreateRequest request) {
         User user = userMapper.toEntity(request);
 
         try {
             User saved = userRepository.save(user);
+
+            userEventProducer.send(new UserEvent(UserEvent.Operation.CREATE, saved.getEmail()));
+
             return userMapper.toResponse(saved);
         } catch (DataIntegrityViolationException e) {
             throw new BadRequestException("User with email already exists: " + request.getEmail());
@@ -79,7 +85,13 @@ public class UserService {
     }
 
     public void delete(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("User not found with id: " + id));
+
         userRepository.deleteById(id);
+
+        userEventProducer.send(new UserEvent(UserEvent.Operation.DELETE, user.getEmail()));
+
     }
 
     public UserResponse getByEmail(String email) {
