@@ -1,4 +1,4 @@
-package aston.user_service.exception;
+package user_service.exception;
 
 public class NotFoundException extends RuntimeException {
     public NotFoundException(String message) {

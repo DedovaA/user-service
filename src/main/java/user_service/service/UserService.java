@@ -1,0 +1,91 @@
+package user_service.service;
+
+import user_service.dto.UserCreateRequest;
+import user_service.dto.UserPatchRequest;
+import user_service.dto.UserResponse;
+import user_service.exception.BadRequestException;
+import user_service.exception.NotFoundException;
+import user_service.mapper.UserMapper;
+import user_service.model.User;
+import user_service.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+@RequiredArgsConstructor
+public class UserService {
+    private final UserRepository userRepository;
+    private final UserMapper userMapper;
+
+    public UserResponse create(UserCreateRequest request) {
+        User user = userMapper.toEntity(request);
+
+        try {
+            User saved = userRepository.save(user);
+            return userMapper.toResponse(saved);
+        } catch (DataIntegrityViolationException e) {
+            throw new BadRequestException("User with email already exists: " + request.getEmail());
+        }
+    }
+
+    public UserResponse getById(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("User not found with id: " + id));
+
+        return userMapper.toResponse(user);
+    }
+
+    public List<UserResponse> getAll() {
+        return userRepository.findAll().stream()
+                .map(userMapper::toResponse)
+                .toList();
+    }
+
+    public UserResponse update(Long id, UserCreateRequest request) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("User not found with id: " + id));
+        user.setName(request.getName());
+        user.setEmail(request.getEmail());
+        user.setAge(request.getAge());
+
+        try {
+            User updated = userRepository.save(user);
+            return userMapper.toResponse(updated);
+        } catch (DataIntegrityViolationException e) {
+            throw new BadRequestException("User with email already exists: " + request.getEmail());
+        }
+    }
+
+    public UserResponse patch(Long id, UserPatchRequest request) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("User not found with id: " + id));
+
+        if (request.getName() != null)
+            user.setName(request.getName().trim());
+        if (request.getEmail() != null)
+            user.setEmail(request.getEmail().trim());
+        if (request.getAge() != null)
+            user.setAge(request.getAge());
+
+        try {
+            User updated = userRepository.save(user);
+            return userMapper.toResponse(updated);
+        } catch (DataIntegrityViolationException e) {
+            throw new BadRequestException("User with email already exists: " + request.getEmail());
+        }
+    }
+
+    public void delete(Long id) {
+        userRepository.deleteById(id);
+    }
+
+    public UserResponse getByEmail(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new NotFoundException("User not found with email: " + email));
+        return userMapper.toResponse(user);
+    }
+
+}

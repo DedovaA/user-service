@@ -1,4 +1,4 @@
-package aston.user_service.model;
+package user_service.model;
 
 import jakarta.persistence.*;
 import lombok.*;
