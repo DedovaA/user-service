@@ -59,6 +59,10 @@
 			<version>3.0.1</version>
 			<scope>compile</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-hateoas</artifactId>
+		</dependency>
 		<!-- Тестирование (Mockito включен в starter-test) -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
