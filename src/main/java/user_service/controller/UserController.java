@@ -2,6 +2,7 @@ package user_service.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.ResponseEntity;
 import user_service.dto.UserCreateRequest;
 import user_service.dto.UserPatchRequest;
 import user_service.dto.UserResponse;
@@ -18,12 +19,13 @@ import java.util.List;
 @RequiredArgsConstructor
 @Tag(name = "Users", description = "Операции с пользователями")
 public class UserController {
+
     private final UserService userService;
 
     @Operation(summary = "Создать пользователя")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public UserResponse create(@Valid @RequestBody UserCreateRequest request) {
+    public UserResponse create(@Valid @RequestBody UserCreateRequest request) { // @RequestBody JSON из body превратит в DTO. @Valid проверит данные согласно аннотациям в DTO
         return userService.create(request);
     }
 
@@ -34,8 +36,8 @@ public class UserController {
     }
 
     @Operation(summary = "Получить пользователя по email")
-    @GetMapping("/email")
-    public UserResponse getByEmail(@RequestParam String email) {
+    @GetMapping(params = "email")
+    public UserResponse getByEmail(@Valid @RequestParam String email) {
         return userService.getByEmail(email);
     }
 
@@ -62,8 +64,9 @@ public class UserController {
     @Operation(summary = "Удалить пользователя")
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
         userService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 
 }
