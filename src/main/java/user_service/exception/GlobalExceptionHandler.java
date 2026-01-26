@@ -10,7 +10,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-@RestControllerAdvice(basePackages = "aston.user_service.controller")
+@RestControllerAdvice(basePackages = "user_service.controller")
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(NotFoundException.class)
