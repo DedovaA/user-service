@@ -1,4 +1,4 @@
-package user_service.assembler;
+package user_service.hateoas;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 import org.springframework.hateoas.EntityModel;
@@ -6,23 +6,13 @@ import org.springframework.hateoas.server.RepresentationModelAssembler;
 import org.springframework.stereotype.Component;
 import user_service.controller.UserController;
 import user_service.dto.UserResponse;
-import user_service.model.User;
 
 @Component
 public class UserModelAssembler implements RepresentationModelAssembler<UserResponse, EntityModel<UserResponse>> {
 
     @Override
     public EntityModel<UserResponse> toModel(UserResponse userResponse) {
-        // 1. Преобразуем сущность БД в наш Record
-//        UserResponse user = new UserResponse(
-//                userResponse.getId(),
-//                userResponse.getName(),
-//                userResponse.getEmail(),
-//                userResponse.getAge(),
-//                userResponse.getCreatedAt()
-//        );
 
-        // 2. Создаем EntityModel и добавляем ссылки
         return EntityModel.of(userResponse,
                 linkTo(methodOn(UserController.class).getById(userResponse.getId())).withSelfRel(),
 

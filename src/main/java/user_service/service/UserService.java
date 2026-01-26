@@ -24,7 +24,6 @@ public class UserService {
     private static final Logger logger = LoggerFactory.getLogger(UserService.class);
     private final UserRepository userRepository;
     private final UserMapper userMapper;
-    //для кафки
     private final UserEventProducer userEventProducer;
 
     public UserResponse create(UserCreateRequest request) {

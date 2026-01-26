@@ -1,12 +1,11 @@
 package user_service.controller;
 
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.http.ResponseEntity;
-import user_service.assembler.UserModelAssembler;
+import user_service.hateoas.UserModelAssembler;
 import user_service.dto.UserCreateRequest;
 import user_service.dto.UserPatchRequest;
 import user_service.dto.UserResponse;
@@ -15,8 +14,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/users")
@@ -30,7 +27,7 @@ public class UserController {
     @Operation(summary = "Создать пользователя")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public EntityModel<UserResponse> create(@Valid @RequestBody UserCreateRequest request) { // @RequestBody JSON из body превратит в DTO. @Valid проверит данные согласно аннотациям в DTO
+    public EntityModel<UserResponse> create(@Valid @RequestBody UserCreateRequest request) {
         return assembler.toModel(userService.create(request));
     }
 
