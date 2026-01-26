@@ -1,5 +1,7 @@
 package user_service.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import user_service.dto.UserCreateRequest;
 import user_service.dto.UserPatchRequest;
 import user_service.dto.UserResponse;
@@ -19,20 +21,25 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class UserService {
+    private static final Logger logger = LoggerFactory.getLogger(UserService.class);
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    //для кафки
     private final UserEventProducer userEventProducer;
 
     public UserResponse create(UserCreateRequest request) {
+        logger.info("Попытка регистрации нового пользователя с email: {}", request.getEmail());
         User user = userMapper.toEntity(request);
 
         try {
             User saved = userRepository.save(user);
+            logger.debug("Пользователь успешно сохранен в БД с ID: {}", saved.getId());
 
             userEventProducer.send(new UserEvent(UserEvent.Operation.CREATE, saved.getEmail()));
 
             return userMapper.toResponse(saved);
         } catch (DataIntegrityViolationException e) {
+            logger.warn("Отказ в регистрации: email {} уже занят", request.getEmail());
             throw new BadRequestException("User with email already exists: " + request.getEmail());
         }
     }
@@ -91,7 +98,6 @@ public class UserService {
         userRepository.deleteById(id);
 
         userEventProducer.send(new UserEvent(UserEvent.Operation.DELETE, user.getEmail()));
-
     }
 
     public UserResponse getByEmail(String email) {

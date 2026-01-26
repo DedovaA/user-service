@@ -1,8 +1,12 @@
 package user_service.controller;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.http.ResponseEntity;
+import user_service.assembler.UserModelAssembler;
 import user_service.dto.UserCreateRequest;
 import user_service.dto.UserPatchRequest;
 import user_service.dto.UserResponse;
@@ -21,44 +25,45 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService;
+    private final UserModelAssembler assembler;
 
     @Operation(summary = "Создать пользователя")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public UserResponse create(@Valid @RequestBody UserCreateRequest request) { // @RequestBody JSON из body превратит в DTO. @Valid проверит данные согласно аннотациям в DTO
-        return userService.create(request);
+    public EntityModel<UserResponse> create(@Valid @RequestBody UserCreateRequest request) { // @RequestBody JSON из body превратит в DTO. @Valid проверит данные согласно аннотациям в DTO
+        return assembler.toModel(userService.create(request));
     }
 
     @Operation(summary = "Получить пользователя по ID")
     @GetMapping("/{id}")
-    public UserResponse getById(@PathVariable Long id) {
-        return userService.getById(id);
+    public EntityModel<UserResponse> getById(@PathVariable Long id) {
+        return assembler.toModel(userService.getById(id));
     }
 
     @Operation(summary = "Получить пользователя по email")
     @GetMapping(params = "email")
-    public UserResponse getByEmail(@Valid @RequestParam String email) {
-        return userService.getByEmail(email);
+    public EntityModel<UserResponse> getByEmail(@Valid @RequestParam String email) {
+        return assembler.toModel(userService.getByEmail(email));
     }
 
     @Operation(summary = "Получить всех пользователей")
     @GetMapping
-    public List<UserResponse> getAll() {
-        return userService.getAll();
+    public CollectionModel<EntityModel<UserResponse>> getAll() {
+        return assembler.toCollectionModel(userService.getAll());
     }
 
     @Operation(summary = "Полностью обновить пользователя")
     @PutMapping("/{id}")
-    public UserResponse update(@PathVariable Long id,
+    public EntityModel<UserResponse> update(@PathVariable Long id,
                                @Valid @RequestBody UserCreateRequest request) {
-        return userService.update(id, request);
+        return assembler.toModel(userService.update(id, request));
     }
 
     @Operation(summary = "Частично обновить пользователя")
     @PatchMapping("/{id}")
-    public UserResponse patch(@PathVariable Long id,
-                               @Valid @RequestBody UserPatchRequest request) {
-        return userService.patch(id, request);
+    public EntityModel<UserResponse> patch(@PathVariable Long id,
+                              @Valid @RequestBody UserPatchRequest request) {
+        return assembler.toModel(userService.patch(id, request));
     }
 
     @Operation(summary = "Удалить пользователя")
@@ -68,5 +73,4 @@ public class UserController {
         userService.delete(id);
         return ResponseEntity.noContent().build();
     }
-
 }
