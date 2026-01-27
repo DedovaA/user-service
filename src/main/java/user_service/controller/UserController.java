@@ -15,6 +15,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/users")
 @RequiredArgsConstructor
@@ -38,15 +40,20 @@ public class UserController {
     }
 
     @Operation(summary = "Получить пользователя по email")
-    @GetMapping(params = "email")
-    public EntityModel<UserResponse> getByEmail(@Valid @RequestParam String email) {
+//    @GetMapping(params = "email")
+//    public EntityModel<UserResponse> getByEmail(@Valid @RequestParam String email) {
+//        return assembler.toModel(userService.getByEmail(email));
+//    }
+    @GetMapping("/email")
+    public EntityModel<UserResponse> getByEmail(@RequestParam String email) {
         return assembler.toModel(userService.getByEmail(email));
     }
 
     @Operation(summary = "Получить всех пользователей")
     @GetMapping
     public CollectionModel<EntityModel<UserResponse>> getAll() {
-        return assembler.toCollectionModel(userService.getAll());
+        List<UserResponse> users = userService.getAll();
+        return assembler.toCollectionModel(users);
     }
 
     @Operation(summary = "Полностью обновить пользователя")
