@@ -1,6 +1,8 @@
 package user_service.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
@@ -27,6 +29,10 @@ public class UserController {
     private final UserModelAssembler assembler;
 
     @Operation(summary = "Создать пользователя")
+    @ApiResponses({
+            @ApiResponse(responseCode = "201", description = "Пользователь создан"),
+            @ApiResponse(responseCode = "400", description = "Ошибка валидации")
+    })
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public EntityModel<UserResponse> create(@Valid @RequestBody UserCreateRequest request) {
@@ -34,6 +40,10 @@ public class UserController {
     }
 
     @Operation(summary = "Получить пользователя по ID")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Успешно"),
+            @ApiResponse(responseCode = "404", description = "Пользователь не найден")
+    })
     @GetMapping("/{id}")
     public EntityModel<UserResponse> getById(@PathVariable Long id) {
         return assembler.toModel(userService.getById(id));
@@ -44,12 +54,17 @@ public class UserController {
 //    public EntityModel<UserResponse> getByEmail(@Valid @RequestParam String email) {
 //        return assembler.toModel(userService.getByEmail(email));
 //    }
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Успешно"),
+            @ApiResponse(responseCode = "404", description = "Пользователь не найден")
+    })
     @GetMapping("/email")
     public EntityModel<UserResponse> getByEmail(@RequestParam String email) {
         return assembler.toModel(userService.getByEmail(email));
     }
 
     @Operation(summary = "Получить всех пользователей")
+    @ApiResponse(responseCode = "200", description = "Список пользователей получен")
     @GetMapping
     public CollectionModel<EntityModel<UserResponse>> getAll() {
         List<UserResponse> users = userService.getAll();
@@ -57,6 +72,10 @@ public class UserController {
     }
 
     @Operation(summary = "Полностью обновить пользователя")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Данные обновлены"),
+            @ApiResponse(responseCode = "404", description = "Пользователь не найден")
+    })
     @PutMapping("/{id}")
     public EntityModel<UserResponse> update(@PathVariable Long id,
                                @Valid @RequestBody UserCreateRequest request) {
@@ -64,6 +83,10 @@ public class UserController {
     }
 
     @Operation(summary = "Частично обновить пользователя")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Данные частично обновлены"),
+            @ApiResponse(responseCode = "404", description = "Пользователь не найден")
+    })
     @PatchMapping("/{id}")
     public EntityModel<UserResponse> patch(@PathVariable Long id,
                               @Valid @RequestBody UserPatchRequest request) {
@@ -71,6 +94,7 @@ public class UserController {
     }
 
     @Operation(summary = "Удалить пользователя")
+    @ApiResponse(responseCode = "204", description = "Пользователь удален")
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<Void> delete(@PathVariable Long id) {
