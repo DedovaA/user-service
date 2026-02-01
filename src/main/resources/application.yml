@@ -1,9 +1,9 @@
 server:
-  port: 8080  #swagger
+  port: 8080  #Swagger localhost:8080
 
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/MyDatabase  # PgAdmin port:80
+    url: jdbc:postgresql://localhost:5432/MyDatabase  # PgAdmin localhost:80
     username: postgres
     password: myforpgdbpar
   jpa:

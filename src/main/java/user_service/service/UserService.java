@@ -44,29 +44,42 @@ public class UserService {
     }
 
     public UserResponse getById(Long id) {
+        logger.info("Попытка получения пользователя с id: {}", id);
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("User not found with id: " + id));
+                .orElseThrow(() -> {
+                    logger.warn("Пользователь с ID: {} не найден", id);
+                    return new NotFoundException("User not found with id: " + id);
+                });
 
+        logger.debug("Пользователь с ID: {} успешно получен",id);
         return userMapper.toResponse(user);
     }
 
     public List<UserResponse> getAll() {
+        logger.info("Попытка получения списка всех пользователей");
+
+        logger.debug("Список пользователей успешно получен");
         return userRepository.findAll().stream()
                 .map(userMapper::toResponse)
                 .toList();
     }
 
     public UserResponse update(Long id, UserCreateRequest request) {
+        logger.info("Попытка обновления пользователя с id: {}", id);
+
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("User not found with id: " + id));
+
         user.setName(request.getName());
         user.setEmail(request.getEmail());
         user.setAge(request.getAge());
 
         try {
             User updated = userRepository.save(user);
+            logger.debug("Пользователь с ID: {} успешно обновлен",id);
             return userMapper.toResponse(updated);
         } catch (DataIntegrityViolationException e) {
+            logger.warn("Отказ обновления, пользователь с email: {} уже существует", user.getEmail());
             throw new BadRequestException("User with email already exists: " + request.getEmail());
         }
     }
