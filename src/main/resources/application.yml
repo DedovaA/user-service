@@ -2,6 +2,12 @@ server:
   port: 8080  #Swagger localhost:8080
 
 spring:
+  application:
+    name: user-service # Имя, под которым сервис будет виден в реестре
+  eureka:
+    client:
+      service-url:
+        defaultZone: http://localhost:8761/eureka/ # Адрес сервера Eureka
   datasource:
     url: jdbc:postgresql://localhost:5432/MyDatabase  # PgAdmin localhost:80
     username: postgres
