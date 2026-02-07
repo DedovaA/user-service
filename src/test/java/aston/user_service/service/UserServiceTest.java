@@ -1,4 +1,4 @@
-package user_service.service;
+package aston.user_service.service;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,9 +14,11 @@ import user_service.dto.UserPatchRequest;
 import user_service.dto.UserResponse;
 import user_service.exception.BadRequestException;
 import user_service.exception.NotFoundException;
+import user_service.kafka.UserEventProducer;
 import user_service.mapper.UserMapper;
 import user_service.model.User;
 import user_service.repository.UserRepository;
+import user_service.service.UserService;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -31,6 +33,8 @@ class UserServiceTest {
 
     @Mock
     private UserRepository userRepository;
+    @Mock
+    private UserEventProducer userEventProducer;
     @Mock
     private UserMapper userMapper;
     @InjectMocks
@@ -217,11 +221,16 @@ class UserServiceTest {
     @DisplayName("Должен удалить пользователя из БД.")
     @Test
     void delete_shouldCallRepositoryDeleteById() {
-        doNothing().when(userRepository).deleteById(1L);
+        Long userId = 1L;
+        User user = new User();
+        user.setId(userId);
+        user.setEmail("test@mail.com");
 
-        userService.delete(1L);
+        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
 
-        verify(userRepository).deleteById(1L);
+        userService.delete(userId);
+
+        verify(userRepository).deleteById(userId);
     }
 
     @DisplayName("Должен вернуть пользователя по email из БД.")

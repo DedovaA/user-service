@@ -11,13 +11,12 @@
 	</parent>
 
 	<groupId>aston</groupId>
-	<artifactId>user-service</artifactId>
+	<artifactId>user-service</artifactId> <!-- название *.jar -->
 	<version>0.0.1-SNAPSHOT</version>
-	<name>user-service</name>
-	<description>Demo project for Spring Boot</description>
 
 	<properties>
 		<java.version>25</java.version>
+		<spring-cloud.version>2025.1.0</spring-cloud.version>
 	</properties>
 
 	<dependencies>
@@ -105,12 +104,35 @@
 			<artifactId>testcontainers-postgresql</artifactId>
 			<scope>test</scope>
 		</dependency>
-
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-json</artifactId>
 		</dependency>
+		<!-- eureka-client -->
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+<!--			<version>5.0.0</version>-->
+			<scope>compile</scope>
+		</dependency>
+		<!-- Config-client -->
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-config</artifactId>
+		</dependency>
 	</dependencies>
+	<!-- Для Spring Cloud -->
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-dependencies</artifactId>
+				<version>${spring-cloud.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 
 	<build>
 		<plugins>
