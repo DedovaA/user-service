@@ -11,10 +11,8 @@
 	</parent>
 
 	<groupId>aston</groupId>
-	<artifactId>user-service</artifactId>
+	<artifactId>user-service</artifactId> <!-- название *.jar -->
 	<version>0.0.1-SNAPSHOT</version>
-	<name>user-service</name>
-	<description>Demo project for Spring Boot</description>
 
 	<properties>
 		<java.version>25</java.version>
